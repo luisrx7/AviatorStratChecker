@@ -8,7 +8,7 @@ from datetime import datetime
 
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-
+from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 
 class Aviator(Browser):
     '''
@@ -97,8 +97,17 @@ class Aviator(Browser):
 
         results = []
         # Extract the values
-        for element in multiplier_elements:
-            results.append(element.text.strip().replace("x", ""))
+        try:
+            for element in multiplier_elements:
+                results.append(element.text.strip().replace("x", ""))
+        except StaleElementReferenceException | NoSuchElementException:
+            #refresh the page
+            self.driver.refresh()
+            pass
+        
+
+
+
             
         if len(results) > 0:
             # if self.debug:
@@ -168,7 +177,8 @@ class Aviator(Browser):
         helium.write("AVIATOR", into="SEARCH")
         #sleep for 2 seconds to let the search results load
         time.sleep(2)
-        self.click_button(vars.play_button_of_first_search_result)
+        self.click_button(vars.play_free_button_of_first_search_result)
+
         #wait for the game to load
         time.sleep(2)
 
