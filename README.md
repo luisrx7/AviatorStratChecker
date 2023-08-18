@@ -1,5 +1,8 @@
 # AviatorStratChecker
 
+![AviatorStratChecker Cover](https://github.com/luisrx7/AviatorStratChecker/blob/main/assets/aviator-cover.webp)
+
+
 Welcome to the AviatorStratChecker repository! This project aims to provide a powerful script for efficiently scraping data from the Aviator game on 22bet. By utilizing the scraped data, you can develop and test your own strategies against historical results without the need to wager any real money. We encourage your active participation by opening issues and submitting pull requests to enhance the project.
 
 ## Features
