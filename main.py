@@ -1,25 +1,46 @@
-from aviator import Aviator
+import logging
+import signal
 
 import rich
+import rich.console
 import rich.traceback
+
+from aviator import Aviator
+
 rich.traceback.install()
 
+console = rich.console.Console()
+
+
+logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', level=logging.INFO, datefmt='%m/%d/%Y %I:%M:%S')
+
+
+def signal_handler(sig, frame):
+    global stop
+    print('You pressed Ctrl+C!')
+    stop = True
+    # sys.exit(0)
+
+
+stop = False
 
 def main():
-    try:
-        aviator = Aviator(debug=True)
-        aviator.login()
-        aviator.go_to_game()
+    
+    while stop is False:
+        try:
+            aviator = Aviator(debug=True)
+            aviator.login()
+            aviator.go_to_game()
 
 
-        while aviator.in_game():
-            aviator.wait_for_game_to_finish()
-            aviator.add_to_log(aviator.get_last_game_result())
-    except Exception as e:
-        rich.print_exception(show_locals=True)
-
-    finally:
-        aviator.close()
+            while aviator.in_game() and stop is False:
+                aviator.wait_for_game_to_finish()
+                aviator.add_to_log(aviator.get_last_game_result())
+        except Exception as e:
+            console.print_exception(show_locals=True)
+            logging.error(e)
+        finally:
+            aviator.close()
 
 if __name__ == "__main__":
     main()
