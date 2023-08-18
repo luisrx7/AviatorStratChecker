@@ -1,0 +1,9 @@
+.vscode/*
+
+# Ignore the virtual environment
+.venv/*
+
+# Ignore the pycache 
+**/__pycache__/*
+results*.txt
+creds.py
