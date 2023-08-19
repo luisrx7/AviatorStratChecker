@@ -5,5 +5,8 @@
 
 # Ignore the pycache 
 **/__pycache__/*
-results*.txt
+results0.txt
+results1.txt
+results2.txt
+.txt
 creds.py
