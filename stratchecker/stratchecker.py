@@ -4,43 +4,37 @@ from strats.exceptions import MaxBetsReached, InsufficientFunds
 import logging
 
 import random
+from rich import print
 
 logger = logging.getLogger(__name__)
 
 
 
 class Strat_checker():
-    def __init__(self, strat:Strat, results_filename:str, slices=[]) -> None:
+    def __init__(self, strat:Strat, results, slices=[]) -> None:
         self.strat = strat
-        self.results_filename = results_filename
         self.slices = slices
+        self.strat_reports = []
+        self.results = results
+
 
     
-    def read_results(self):
-        #read file
-        with open(self.results_filename) as f:
-            file_content = f.readlines()
 
-        #remove timestamp and newline
-        self.results = [float(x.split(",")[1].replace("\n","")) for x in file_content]
-        #invert list
-        self.results.reverse()
-
-
-    def slice_results(self,max_length,count):
+    @staticmethod
+    def slice_results(count,max_bets,results_length):
         
         '''
         slice results in a random place making sure that
         the max_length of the slice is not exceeded
-        return the slice
+        return the slice indexes
         '''
         slices = []
         for i in range(count):
             #get random start index
-            start_index = random.randint(0,len(self.results)-max_length)
+            start_index = random.randint(0,results_length-max_bets)
             
             #get random end index
-            end_index = start_index+max_length
+            end_index = start_index+max_bets
                         
             slices.append((start_index,end_index))
         
@@ -72,6 +66,8 @@ class Strat_checker():
         count must be greater than 1 if random_slice is True
         '''
         
+
+        
         if random_slice is True and count == 1:
             logging.warning("random_slice is True and count is 1, setting random_slice to False")
             random_slice = False
@@ -79,7 +75,6 @@ class Strat_checker():
         if self.strat.max_bets > len(self.results):
             logging.warning(f"max bets {self.strat.max_bets} is greater than the number of results {len(self.results)}, setting max bets to {len(self.results)}")
             self.strat.max_bets = len(self.results)
-        self.strat_reports = []
         
         
         if len(self.slices) == 0:
@@ -89,9 +84,7 @@ class Strat_checker():
             
         for i in range(count):
 
-                    
             self.strat.reset()
-            
             try:
                 for result in self.results[self.slices[i][0]:self.slices[i][1]]:
                     self.strat.gamble()
