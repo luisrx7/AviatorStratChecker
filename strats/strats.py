@@ -1,6 +1,7 @@
 
 
 import logging
+from strats.exceptions import MaxBetsReached, InsufficientFunds
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +21,9 @@ class Strat():
         self.lose_streak = 0
         self.max_bets = max_bets
         self.number_of_bets = 0
+        self.win_count = 0
+        self.lose_count = 0
+        
 
 
     def description(self):
@@ -53,18 +57,18 @@ class Strat():
 
     def gamble(self):
         #take the bet from the balance
-        logging.info(f"\nbet {self.bet} - {self.multiplier}  from balance {self.balance:.2f}")
+        logging.debug(f"\nbet {self.bet} - {self.multiplier}  from balance {self.balance:.2f}")
 
         if self.number_of_bets >= self.max_bets:
-            logging.info(f"number of bets allowed {self.max_bets} reached, not gamble anymore")
+            logging.error(f"number of bets allowed {self.max_bets} reached, not betting anymore")
             self.bet = 0
             self.multiplier = 0
-            return
+            raise MaxBetsReached
         if self.bet > self.balance:
-            logging.info(f"bet {self.bet} is greater than balance {self.balance:.2f} cannot gamble anymore")
+            logging.info(f"bet {self.bet} is greater than balance {self.balance:.2f} cannot bet anymore")
             self.bet = 0
             self.multiplier = 0
-            return
+            raise InsufficientFunds
         if self.bet > self.max_bet:
             logging.info(f"bet {self.bet} is greater than max bet {self.max_bet} using max bet {self.max_bet} instead")
             self.bet = self.max_bet
@@ -81,21 +85,39 @@ class Strat():
         self.balance += self.bet * self.multiplier
         self.win_streak += 1
         self.lose_streak = 0
+        self.win_count += 1
 
     def on_lose(self):
         #bet manipulation should be  implemented in subclass
-        logging.info(f"lose : previous bet: {self.bet}, previous balance: {self.balance:.2f}, new balance: {self.balance - self.bet:.2f}")
+        logging.warn(f"lose : previous bet: {self.bet}, previous balance: {self.balance:.2f}, new balance: {self.balance - self.bet:.2f}")
         self.win_streak = 0
         self.lose_streak += 1
+        self.lose_count += 1
 
 
-    def on_game_start(self):
+    def reset(self):
 
         logging.info(f"game start : base bet: {self.bet}, balance: {self.balance:.2f}")
         self.bet = self.base_bet
         self.win_streak = 0
         self.lose_streak = 0
         self.number_of_bets = 0
+        self.multiplier = self.initial_multiplier
+        self.win_count = 0
+        self.lose_count = 0
+        self.balance = self.start_balance
+        
+            
+    def report(self):
+        # print the  final balance
+        return(f"""\nResume:
+        start balance: {self.start_balance}
+        final balance: {self.balance:.2f}
+        won: {self.balance - self.start_balance:.2f}
+        win count: {self.win_count}
+        lose count: {self.lose_count}
+        bet count: {self.number_of_bets}
+        """)
 
 
 
