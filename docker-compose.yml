@@ -5,3 +5,6 @@ services:
       - "4446:4444"
     # env_file:
     #   - ./.env
+
+    environment:
+      - VNC_NO_PASSWORD=1
