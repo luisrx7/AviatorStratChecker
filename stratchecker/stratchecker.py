@@ -27,6 +27,12 @@ class Strat_checker():
         slice results in a random place making sure that
         the max_length of the slice is not exceeded
         return the slice indexes
+
+        #TODO
+        a good slice is one that contains a loss streak of at least 6 losses assuming a
+        multiplier of 2
+        based on the assumption that the strat will recover from that loss streak
+
         '''
         slices = []
         for i in range(count):
@@ -97,7 +103,7 @@ class Strat_checker():
                 logging.error(e)
             
             finally:
-                self.strat_reports.append(self.strat.report() + f"slice: {self.slices[i]}")
+                self.strat_reports.append(self.strat.report_as_string() + f"slice: {self.slices[i]}")
                 
 
                 

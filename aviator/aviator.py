@@ -100,7 +100,7 @@ class Aviator(Browser):
         try:
             for element in multiplier_elements:
                 results.append(element.text.strip().replace("x", ""))
-        except StaleElementReferenceException | NoSuchElementException:
+        except StaleElementReferenceException or NoSuchElementException:
             #refresh the page
             self.driver.refresh()
             pass

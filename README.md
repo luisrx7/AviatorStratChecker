@@ -1,5 +1,8 @@
 # AviatorStratChecker
 
+[![Ruff](https://github.com/luisrx7/AviatorStratChecker/actions/workflows/ruff.yml/badge.svg)](https://github.com/luisrx7/AviatorStratChecker/actions/workflows/ruff.yml)
+[![build](https://github.com/luisrx7/AviatorStratChecker/actions/workflows/tests.yml/badge.svg)](https://github.com/luisrx7/AviatorStratChecker/actions/workflows/tests.yml)
+
 ![AviatorStratChecker Cover](https://github.com/luisrx7/AviatorStratChecker/blob/main/assets/aviator-cover.webp)
 
 

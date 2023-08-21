@@ -81,7 +81,7 @@ class Strat():
 
     def on_win(self):
         #bet manipulation should be  implemented in subclass
-        logging.info(f"win : previous bet: {self.bet}, previous balance: {self.balance:.2f}, new balance: {self.balance + self.bet * self.multiplier:.2f}")
+        logging.info(f"win : previous bet: {self.bet}, previous balance: {self.balance:.2f}, new balance: {self.balance + (self.bet * self.multiplier):.2f}")
         self.balance += self.bet * self.multiplier
         self.win_streak += 1
         self.lose_streak = 0
@@ -89,7 +89,7 @@ class Strat():
 
     def on_lose(self):
         #bet manipulation should be  implemented in subclass
-        logging.warn(f"lose : previous bet: {self.bet}, previous balance: {self.balance:.2f}, new balance: {self.balance - self.bet:.2f}")
+        logging.warning(f"lose : previous bet: {self.bet}, previous balance: {self.balance:.2f}, new balance: {self.balance - self.bet:.2f}")
         self.win_streak = 0
         self.lose_streak += 1
         self.lose_count += 1
@@ -108,16 +108,31 @@ class Strat():
         self.balance = self.start_balance
         
             
-    def report(self):
+    def report_as_string(self):
         # print the  final balance
-        return(f"""\nResume:
+        return(f"""
         start balance: {self.start_balance}
         final balance: {self.balance:.2f}
         won: {self.balance - self.start_balance:.2f}
         win count: {self.win_count}
         lose count: {self.lose_count}
         bet count: {self.number_of_bets}
+        base bet: {self.base_bet}
+        max bet: {self.max_bet}
+        multiplier: {self.multiplier}
         """)
+
+    def report(self):
+        return {"start_balance": self.start_balance,
+            "final_balance": self.balance,
+            "won": self.balance - self.start_balance,
+            "win_count": self.win_count,
+            "lose_count": self.lose_count,
+            "bet_count": self.number_of_bets,
+            "base_bet": self.base_bet,
+            "max_bet": self.max_bet,
+            "multiplier": self.multiplier
+        }
 
 
 
