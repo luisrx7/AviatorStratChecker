@@ -6,6 +6,8 @@ from selenium.webdriver.common.by import By
 import time
 from datetime import datetime 
 
+from strats.strats import Strat
+
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
@@ -18,12 +20,16 @@ class Aviator(Browser):
 
     def __init__(self, headless=False, test=False, remote_driver=True,
                 remote_address="127.0.0.1",remote_port=4446, use_cookies=False,
-                debug=False):
+                debug=False,strat: Strat = None):
         super().__init__(headless= headless, test=test, remote_driver=remote_driver,
                 remote_address=remote_address,remote_port=remote_port,
                   use_cookies=use_cookies, profile_path=vars.profile_path)
         
         self.debug = debug
+        self.strat = strat
+        
+        if self.strat is not None:
+            self.strat.reset()
 
         helium.set_driver(self.driver)
         
@@ -78,10 +84,45 @@ class Aviator(Browser):
         '''
         # if self.debug:
         #     print("getting last game result")
+
+        element = self.find_elements(By.XPATH, vars.last_game_result, timeout=0.5)
         
+        if element is not None:
+            return element.text.strip().replace("x", "")
+
+
         results = self.get_game_results()
         if len(results) > 0:
             return results[0]
+
+    def process_bet(self, result):
+        '''
+        check if a strat is defined
+        if it is, use it to calculate the next bet
+        if not warn the user that a strat is not defined
+        '''
+        if self.debug:
+            print(f"processing bet for result {result}")
+        if self.strat is None:
+            print("WARNING: no strat defined")
+            return False
+
+        self.strat.calculate_bet(result)
+        if self.debug:
+            print(f"bet: {self.strat.bet}, multiplier: {self.strat.multiplier}")
+
+        if self.strat.bet == 0 or self.strat.multiplier == 0:
+            if self.debug:
+                print("bet or multiplier is 0, not placing bet")
+            return False        
+
+        if self.place_bet(self.strat.bet, self.strat.multiplier) is False:
+            if self.debug:
+                print("could not place bet")
+            return False
+        
+        self.strat.gamble()
+
 
     def get_game_results(self):
         '''
@@ -150,15 +191,13 @@ class Aviator(Browser):
             print("waiting for game to finish")
         last_result = self.get_last_game_result()
         while True:
-
             if self.get_last_game_result() != last_result:
                 break
             if self.debug:
                 print(".", end="")
-            time.sleep(0.5)
+            time.sleep(0.1)
         if self.debug:
-            print("")
-            print("game finished")
+            print("\ngame finished")
     
     def add_to_log(self, result):
         '''
@@ -169,6 +208,50 @@ class Aviator(Browser):
             print(f"adding result {result}  to log")
         with open("results.txt", "a") as f:
             f.write(f"{datetime.now().strftime('%d-%m-%Y %H:%M:%S')},{result}\n")
+
+
+    def setup_auto_bet(self):
+        '''
+        click the buttons to setup auto cashout
+        '''
+        if self.debug:
+            print("setting up auto bet")
+
+        if self.click_button(vars.bet_type_button) is False:
+            if self.debug:
+                print("could not click bet type button")
+            return False
+        if self.click_button(vars.auto_cashout_button) is False:
+            if self.debug:
+                print("could not click auto cashout button")
+            return False
+        
+
+    def place_bet(self,amount, multiplier):
+        '''
+        place bet with amount and multiplier
+        '''
+        if self.debug:
+            print(f"setting bet amount to {amount} at multiplier {multiplier}")
+
+
+        if self.send_keys(vars.bet_amount_input_box, str(amount)) is False:
+            if self.debug:
+                print("could not set bet amount")
+            return False
+
+        if self.send_keys(vars.multiplier_input_box, str(multiplier)) is False:
+            if self.debug:
+                print("could not set multiplier")
+            return False
+        
+        if self.click_button(vars.place_bet_button) is False:
+            if self.debug:
+                print("could not click place bet button")
+            return False
+        
+        return True
+
 
     def go_to_game(self):
         wait = WebDriverWait(self.driver, 10)

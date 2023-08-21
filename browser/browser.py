@@ -6,6 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.keys import Keys
 
 import os 
 
@@ -40,6 +41,18 @@ class Browser:
         self.chrome_options.add_experimental_option('excludeSwitches',
                                                      ['enable-logging'])
         
+        # Adding argument to disable the AutomationControlled flag 
+        self.chrome_options.add_argument("--disable-blink-features=AutomationControlled") 
+        
+        # Exclude the collection of enable-automation switches 
+        self.chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"]) 
+        
+        # Turn-off userAutomationExtension 
+        self.chrome_options.add_experimental_option("useAutomationExtension", False) 
+        
+        # Setting the driver path and requesting a page 
+        
+        
         if self.profile_path != "":
             print("profile path",self.profile_path)
             os.makedirs(self.profile_path, exist_ok=True)
@@ -51,6 +64,9 @@ class Browser:
             self.driver = webdriver.Chrome(service=ChromeDriverManager().install(), # type: ignore  # noqa: E501
                                            options=self.chrome_options) 
             
+        # Changing the property of the navigator value for webdriver to undefined 
+        self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})") 
+        
         self.driver.implicitly_wait(5)
 
     def find_elements(self,by, value, timeout=5):
@@ -116,4 +132,16 @@ class Browser:
             buttons[0].click()
             return True
         return False
+    
+    def send_keys(self,element_id,keys,clear_first = True):
+        element = self.find_elements(By.XPATH, element_id,timeout=1)
+        if element is None:
+            return False
+        
+        if clear_first:
+            element.send_keys(Keys.CONTROL + "a")
+        
+        element.send_keys(keys)
+        
+        return True
     
