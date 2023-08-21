@@ -45,7 +45,7 @@ class TestDAlembertStrat(unittest.TestCase):
         self.assertEqual(self.strat.win_count, 1)
         self.assertEqual(self.strat.lose_count, 0)
 
-    def test_on_win2(self):
+    def test_on_win_in_a_row(self):
         #make 2 wins in a row
         self.strat.balance = 1000  # Simulating a win
         self.strat.start_balance = 1000
@@ -86,7 +86,7 @@ class TestDAlembertStrat(unittest.TestCase):
         self.assertEqual(self.strat.win_count, 0)
         self.assertEqual(self.strat.lose_count, 1)
 
-    def test_on_lose(self):
+    def test_on_lose_in_a_row(self):
         self.strat.balance = 1000  # Simulating a loss
         self.strat.bet = self.base_bet # 10
         initial_bet = self.strat.bet
