@@ -45,7 +45,7 @@ class TestStrat(unittest.TestCase):
         self.assertEqual(self.strat.balance, self.strat.start_balance)
 
     def test_report(self):
-        report = self.strat.report()
+        report = self.strat.report_as_string()
         self.assertIn("start balance: 1000", report)
         self.assertIn("final balance: 1000.0", report)
         self.assertIn("won: 0.0", report)

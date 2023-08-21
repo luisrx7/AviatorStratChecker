@@ -34,11 +34,12 @@ class TestMartingaleStrat(unittest.TestCase):
         self.assertEqual(self.strat.lose_count, 0)
 
     def test_on_win(self):
-        self.strat.balance = 1100  # Simulating a win
+        self.strat.balance = 1000  # Simulating a win
         initial_bet = self.strat.bet
         initial_balance = self.strat.balance
+        self.strat.gamble() # take the bet from the balance 1000 - 10 = 990
         self.strat.on_win()
-        self.assertEqual(self.strat.balance, initial_balance + initial_bet * self.multiplier)
+        self.assertEqual(self.strat.balance, (initial_balance - self.strat.bet) + initial_bet * self.multiplier)
         self.assertEqual(self.strat.bet, self.base_bet)
         self.assertEqual(self.strat.win_streak, 1)
         self.assertEqual(self.strat.lose_streak, 0)
@@ -49,6 +50,7 @@ class TestMartingaleStrat(unittest.TestCase):
         self.strat.balance = 900  # Simulating a loss
         initial_bet = self.strat.bet
         initial_balance = self.strat.balance
+        self.strat.gamble() # take the bet from the balance 1000 - 10 (base_bet) = 990
         self.strat.on_lose()
         self.assertEqual(self.strat.balance, initial_balance - initial_bet)
         self.assertEqual(self.strat.bet, initial_bet * 2)
