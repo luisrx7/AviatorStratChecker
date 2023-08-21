@@ -49,11 +49,37 @@ To set up and use AviatorStratChecker, follow these simple steps:
    ```
 
 
-5. **Execute the script:**
+5. **Execute the script to start gathering live results:**
    ```bash
    python main.py
    ```
 
+
+
+
+## To test Strategies
+
+1. **Edit the file strats/custom_strats.py to add your strategies:**
+   ```python
+   class ExampleStrat(Strat):
+
+    def on_win(self):
+        super().on_win()
+
+        self.bet = self.base_bet * 1.5
+
+    def on_lose(self):
+        super().on_lose()
+        
+        self.bet = self.base_bet
+   ```
+
+2. **Edit the checker.py script to test your new strat**
+
+3. **Run the checker.py script to test your strat:**
+   ```bash
+   python checker.py
+   ```
 
 ## Contributing
 We welcome contributions! If you encounter any issues or have suggestions, please open an issue or submit a pull request.
