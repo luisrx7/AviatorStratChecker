@@ -14,7 +14,9 @@ class Strat_checker():
     def __init__(self, strat:Strat, results, slices=[]) -> None:
         self.strat = strat
         self.slices = slices
+        self.strat_reports_as_string = []
         self.strat_reports = []
+
         self.results = results
 
 
@@ -52,10 +54,48 @@ class Strat_checker():
     
     
 
-    def report(self):
+    def report_as_string(self):
         print(f"\nStrategy: {self.strat.description}")
-        for report in self.strat_reports:
+        for report in self.strat_reports_as_string:
             print(report)            
+
+    def report(self):
+        avg_won = 0
+        avg_final_balance = 0
+        avg_highest_balance = 0
+        avg_lowest_balance = 0
+
+
+        runs_with_negative_balance = 0
+        runs_backrupt = 0
+
+        for report in self.strat_reports:
+            avg_won += report["won"]
+            avg_final_balance += report["final_balance"]
+            avg_highest_balance += report["highest_balance"]
+            avg_lowest_balance += report["lowest_balance"]
+
+            if report["final_balance"] < report["start_balance"]:
+                runs_with_negative_balance += 1
+            if report["final_balance"] <= report["base_bet"]:
+                runs_backrupt += 1
+
+
+        avg_won = avg_won / len(self.strat_reports)
+        avg_final_balance = avg_final_balance / len(self.strat_reports)
+        avg_highest_balance = avg_highest_balance / len(self.strat_reports)
+        avg_lowest_balance = avg_lowest_balance / len(self.strat_reports)
+
+        return {
+            "strat_name": self.strat.description,
+            "avg_won": avg_won,
+            "avg_final_balance": avg_final_balance,
+            "avg_highest_balance": avg_highest_balance,
+            "avg_lowest_balance": avg_lowest_balance,
+            "runs_with_negative_balance": runs_with_negative_balance,
+            "runs_backrupt": runs_backrupt,
+
+        }
 
     
     def get_slices(self):
@@ -103,7 +143,8 @@ class Strat_checker():
                 logging.error(e)
             
             finally:
-                self.strat_reports.append(self.strat.report_as_string() + f"slice: {self.slices[i]}")
+                self.strat_reports_as_string.append(self.strat.report_as_string() + f"slice: {self.slices[i]}")
+                self.strat_reports.append(self.strat.report())
                 
 
                 

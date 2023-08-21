@@ -59,7 +59,7 @@ class DAlembertStrat(Strat):
     def on_win(self):
         super().on_win()
         if self.bet > self.base_bet:
-            self.bet = self.bet - self.base_bet
+            self.bet = round(self.bet - self.base_bet,2)
         else:
             self.bet = self.base_bet
 
@@ -67,7 +67,7 @@ class DAlembertStrat(Strat):
         super().on_lose()
         
         if self.bet < self.max_bet:
-            self.bet = self.bet + self.base_bet
+            self.bet = round(self.bet + self.base_bet,2)
         else:
             self.bet = self.max_bet
 
