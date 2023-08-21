@@ -1,5 +1,4 @@
 import logging
-import signal
 
 import rich
 import rich.console
