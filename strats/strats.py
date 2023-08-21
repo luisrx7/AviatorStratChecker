@@ -81,7 +81,7 @@ class Strat():
 
     def on_win(self):
         #bet manipulation should be  implemented in subclass
-        logging.info(f"win : previous bet: {self.bet}, previous balance: {self.balance:.2f}, new balance: {self.balance + self.bet * self.multiplier:.2f}")
+        logging.info(f"win : previous bet: {self.bet}, previous balance: {self.balance:.2f}, new balance: {self.balance + (self.bet * self.multiplier):.2f}")
         self.balance += self.bet * self.multiplier
         self.win_streak += 1
         self.lose_streak = 0
@@ -89,7 +89,7 @@ class Strat():
 
     def on_lose(self):
         #bet manipulation should be  implemented in subclass
-        logging.warn(f"lose : previous bet: {self.bet}, previous balance: {self.balance:.2f}, new balance: {self.balance - self.bet:.2f}")
+        logging.warning(f"lose : previous bet: {self.bet}, previous balance: {self.balance:.2f}, new balance: {self.balance - self.bet:.2f}")
         self.win_streak = 0
         self.lose_streak += 1
         self.lose_count += 1
