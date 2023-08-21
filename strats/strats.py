@@ -23,6 +23,11 @@ class Strat():
         self.number_of_bets = 0
         self.win_count = 0
         self.lose_count = 0
+        self.lowest_balance = start_balance
+        self.highest_balance = start_balance
+        self.highest_win_streak = 0
+        self.highest_lose_streak = 0
+
         
 
 
@@ -54,6 +59,8 @@ class Strat():
             self.on_win()
         else:
             self.on_lose()
+        
+        self.update_stats()
 
     def gamble(self):
         #take the bet from the balance
@@ -77,7 +84,18 @@ class Strat():
         self.balance = self.balance - self.bet
         self.number_of_bets += 1
 
+    
+    def update_stats(self):
+        if self.balance > self.highest_balance:
+            self.highest_balance = self.balance
+        if self.balance < self.lowest_balance:
+            self.lowest_balance = self.balance
+        if self.win_streak > self.highest_win_streak:
+            self.highest_win_streak = self.win_streak
+        if self.lose_streak > self.highest_lose_streak:
+            self.highest_lose_streak = self.lose_streak
         
+
 
     def on_win(self):
         #bet manipulation should be  implemented in subclass
@@ -86,6 +104,7 @@ class Strat():
         self.win_streak += 1
         self.lose_streak = 0
         self.win_count += 1
+
 
     def on_lose(self):
         #bet manipulation should be  implemented in subclass
@@ -106,6 +125,11 @@ class Strat():
         self.win_count = 0
         self.lose_count = 0
         self.balance = self.start_balance
+        self.lowest_balance = self.start_balance
+        self.highest_balance = self.start_balance
+        self.highest_win_streak = 0
+        self.highest_lose_streak = 0
+
         
             
     def report_as_string(self):
@@ -120,6 +144,10 @@ class Strat():
         base bet: {self.base_bet}
         max bet: {self.max_bet}
         multiplier: {self.multiplier}
+        lowest balance: {self.lowest_balance:.2f}
+        highest balance: {self.highest_balance:.2f}
+        highest win streak: {self.highest_win_streak}
+        highest lose streak: {self.highest_lose_streak}
         """)
 
     def report(self):
@@ -131,7 +159,12 @@ class Strat():
             "bet_count": self.number_of_bets,
             "base_bet": self.base_bet,
             "max_bet": self.max_bet,
-            "multiplier": self.multiplier
+            "multiplier": self.multiplier,
+            "lowest_balance": self.lowest_balance,
+            "highest_balance": self.highest_balance,
+            "highest_win_streak": self.highest_win_streak,
+            "highest_lose_streak": self.highest_lose_streak,
+
         }
 
 
