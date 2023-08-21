@@ -1,6 +1,5 @@
 import unittest
 from strats.custom_strats import MartingaleStrat 
-from strats.exceptions import MaxBetsReached, InsufficientFunds
 
 class TestMartingaleStrat(unittest.TestCase):
     def setUp(self):
