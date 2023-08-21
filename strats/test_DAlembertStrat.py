@@ -86,6 +86,36 @@ class TestDAlembertStrat(unittest.TestCase):
         self.assertEqual(self.strat.win_count, 0)
         self.assertEqual(self.strat.lose_count, 1)
 
+    def test_on_lose(self):
+        self.strat.balance = 1000  # Simulating a loss
+        self.strat.bet = self.base_bet # 10
+        initial_bet = self.strat.bet
+        initial_balance = self.strat.balance
+
+        self.strat.gamble() # take the bet from the balance 1000 - 10 (base_bet) = 990
+        self.strat.on_lose() # bet is now 20
+
+        self.assertEqual(self.strat.balance, initial_balance - initial_bet)
+        self.assertEqual(self.strat.bet, self.strat.base_bet * 2 )
+        self.assertEqual(self.strat.win_streak, 0)
+        self.assertEqual(self.strat.lose_streak, 1)
+        self.assertEqual(self.strat.win_count, 0)
+        self.assertEqual(self.strat.lose_count, 1)
+
+
+        self.strat.gamble() # take the bet from the balance 990 - 20 = 970
+        self.strat.on_lose() # bet is now 30
+
+        self.assertEqual(self.strat.bet, self.strat.base_bet * 3 )
+        self.assertEqual(self.strat.balance, initial_balance - self.strat.base_bet * 3)
+        self.assertEqual(self.strat.bet, self.strat.base_bet * 3)
+        self.assertEqual(self.strat.win_streak, 0)
+        self.assertEqual(self.strat.lose_streak, 2)
+        self.assertEqual(self.strat.win_count, 0)
+        self.assertEqual(self.strat.lose_count, 2)
+
+        
+
     # Add more tests for other methods as needed
 
 if __name__ == '__main__':
