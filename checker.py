@@ -1,13 +1,11 @@
 
 from strats.custom_strats import MartingaleStrat, AntiMartingaleStrat, DAlembertStrat, ParoliStrat, one_3_2_6Strat,AntiDAlembertStrat,FibonacciStrat,DAlembertStopLossCooldownStrat
 from stratchecker.stratchecker import Strat_checker
-from strats.strats import Strat
 
 import logging
 from rich import print
 import pickle
 import os
-import numpy as np
 
 logging.basicConfig(format='%(message)s', level=logging.INFO, datefmt='%m/%d/%Y %I:%M:%S')
 

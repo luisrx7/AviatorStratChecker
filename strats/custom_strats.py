@@ -55,7 +55,7 @@ class DAlembertStrat(Strat):
     def __init__(self,description,start_balance, base_bet, max_bet, multiplier ,max_bets):
         super().__init__(description,start_balance, base_bet, max_bet, multiplier ,max_bets)
         if description == "":
-            self.description = f"DAlembert"
+            self.description = f"DAlembert {base_bet} {multiplier}"
 
     def on_win(self):
         super().on_win()
@@ -81,7 +81,7 @@ class AntiDAlembertStrat(Strat):
     def __init__(self,description,start_balance, base_bet, max_bet, multiplier ,max_bets):
         super().__init__(description,start_balance, base_bet, max_bet, multiplier ,max_bets)
         if description == "":
-            self.description = f"DAlembert"
+            self.description = f"AntiDAlembert {base_bet} {multiplier}"
 
     def on_lose(self):
         super().on_lose()
