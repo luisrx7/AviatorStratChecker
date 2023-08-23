@@ -54,7 +54,8 @@ class DAlembertStrat(Strat):
     '''
     def __init__(self,description,start_balance, base_bet, max_bet, multiplier ,max_bets):
         super().__init__(description,start_balance, base_bet, max_bet, multiplier ,max_bets)
-        
+        if description == "":
+            self.description = f"DAlembert"
 
     def on_win(self):
         super().on_win()
@@ -70,6 +71,75 @@ class DAlembertStrat(Strat):
             self.bet = round(self.bet + self.base_bet,2)
         else:
             self.bet = self.max_bet
+
+
+class AntiDAlembertStrat(Strat):
+    '''
+    Anti D Alembert System | Increase your bet amount by 1 unit whenever you win and decrease by 1 unit if you lose.
+    1 unit = base_bet
+    '''
+    def __init__(self,description,start_balance, base_bet, max_bet, multiplier ,max_bets):
+        super().__init__(description,start_balance, base_bet, max_bet, multiplier ,max_bets)
+        if description == "":
+            self.description = f"DAlembert"
+
+    def on_lose(self):
+        super().on_lose()
+        if self.bet > self.base_bet:
+            self.bet = round(self.bet - self.base_bet,2)
+        else:
+            self.bet = self.base_bet
+
+
+        
+    def on_win(self):
+        super().on_win()    
+
+        if self.bet < self.max_bet:
+            self.bet = round(self.bet + self.base_bet,2)
+        else:
+            self.bet = self.max_bet
+
+class DAlembertStopLossCooldownStrat(Strat):
+    '''
+    D Alembert System | Increase your bet amount by 1 unit whenever you lose and decrease by 1 unit if you win.
+    if you lose x times in a row, enter a cooldown period of y bets
+    1 unit = base_bet
+    '''
+    def __init__(self,description,start_balance, base_bet, max_bet, multiplier ,max_bets, max_lose_streak, stop_loss_cooldown):
+        super().__init__(description,start_balance, base_bet, max_bet, multiplier ,max_bets)
+        if description == "":
+            self.description = f"DAlembert Stop Loss Cooldown {max_lose_streak} {stop_loss_cooldown}"
+        
+        self.max_lose_streak = max_lose_streak
+        self.stop_loss_cooldown = stop_loss_cooldown
+
+
+    def on_win(self):
+        super().on_win()    
+
+        if self.bet < self.max_bet:
+            self.bet = round(self.bet + self.base_bet,2)
+        else:
+            self.bet = self.max_bet
+
+    def on_lose(self):
+        super().on_lose()
+
+        if self.lose_streak >= self.max_lose_streak:
+            self.bet_cooldown = self.stop_loss_cooldown
+        
+        else:
+            if self.bet > self.base_bet:
+                self.bet = round(self.bet - self.base_bet,2)
+            else:
+                self.bet = self.base_bet
+
+
+        
+
+
+
 
 class ParoliStrat(Strat):
     '''
@@ -122,20 +192,24 @@ class FibonacciStrat(Strat):
     needs work
 
     '''
+
     
     def __init__(self,description,start_balance, base_bet, max_bet, multiplier ,max_bets):
         super().__init__(description,start_balance, base_bet, max_bet, multiplier ,max_bets)
-        
+        self.fibonacci_sequence = [1,1,2,3,5,8,13,21,34,55,89,144,233,377,610]
+        self.current_fibonacci_index = 0
         
     def on_win(self):
         super().on_win()
-
+        #go down the fibonacci sequence by 2
+        self.current_fibonacci_index -= 2 if self.current_fibonacci_index >= 2 else 0
         self.bet = self.bet + self.base_bet
 
     def on_lose(self):
         super().on_lose()
-        
-        self.bet = self.base_bet
+        #go up the fibonacci sequence
+        self.current_fibonacci_index += 1 if self.current_fibonacci_index < len(self.fibonacci_sequence) else len(self.fibonacci_sequence)
+        self.bet = self.base_bet * self.fibonacci_sequence[self.current_fibonacci_index]
 
 
 class one_3_2_6Strat(Strat):
