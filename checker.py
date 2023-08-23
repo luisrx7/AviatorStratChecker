@@ -76,42 +76,59 @@ def main():
                             max_bets=max_bets ))
     
     
-    # strats.append(AntiMartingaleStrat("AntiMartingale",
-    #                         start_balance=start_balance,
-    #                         base_bet=base_bet,
-    #                         max_bet=max_bet,
-    #                         multiplier=multiplier,
-    #                         max_bets=max_bets ))
+    strats.append(AntiMartingaleStrat("AntiMartingale",
+                            start_balance=start_balance,
+                            base_bet=base_bet,
+                            max_bet=max_bet,
+                            multiplier=multiplier,
+                            max_bets=max_bets ))
     
-    # strats.append(DAlembertStopLossCooldownStrat(description="DAlembertStopLossCooldownStrat",
-    #                         start_balance=start_balance,
-    #                         base_bet=base_bet,
-    #                         max_bet=max_bet,
-    #                         multiplier=multiplier,
-    #                         max_bets=max_bets,
-    #                         max_lose_streak = 5,
-    #                         stop_loss_cooldown = 10
-    #                         ))
+
+    strats.append(DAlembertStrat(description="DAlembertStrat",
+                        start_balance=start_balance,
+                        base_bet=base_bet,
+                        max_bet=max_bet,
+                        multiplier=multiplier,
+                        max_bets=max_bets,
+                        ))
     
-    # strats.append(FibonacciStrat("FibonacciStrat",
-    #                         start_balance=start_balance,
-    #                         base_bet=base_bet,
-    #                         max_bet=5,
-    #                         multiplier=multiplier,
-    #                         max_bets=max_bets ))
-    # strats.append(ParoliStrat("Paroli",
-    #                         start_balance=start_balance,
-    #                         base_bet=base_bet,
-    #                         max_bet=max_bet,
-    #                         multiplier=multiplier,
-    #                         max_bets=max_bets ))
+    strats.append(AntiDAlembertStrat("AntiDAlembertStrat",
+                        start_balance=start_balance,
+                        base_bet=base_bet,
+                        max_bet=max_bet,
+                        multiplier=multiplier,
+                        max_bets=max_bets ))
     
-    # strats.append(one_3_2_6Strat("one_3_2_6",
-    #                         start_balance=start_balance,
-    #                         base_bet=base_bet,
-    #                         max_bet=max_bet,
-    #                         multiplier=multiplier,
-    #                         max_bets=max_bets ))
+
+    strats.append(DAlembertStopLossCooldownStrat(description="DAlembertStopLossCooldownStrat",
+                            start_balance=start_balance,
+                            base_bet=base_bet,
+                            max_bet=max_bet,
+                            multiplier=multiplier,
+                            max_bets=max_bets,
+                            max_lose_streak = 5,
+                            stop_loss_cooldown = 10
+                            ))
+    
+    strats.append(FibonacciStrat("FibonacciStrat",
+                            start_balance=start_balance,
+                            base_bet=base_bet,
+                            max_bet=5,
+                            multiplier=multiplier,
+                            max_bets=max_bets ))
+    strats.append(ParoliStrat("Paroli",
+                            start_balance=start_balance,
+                            base_bet=base_bet,
+                            max_bet=max_bet,
+                            multiplier=multiplier,
+                            max_bets=max_bets ))
+    
+    strats.append(one_3_2_6Strat("one_3_2_6",
+                            start_balance=start_balance,
+                            base_bet=base_bet,
+                            max_bet=max_bet,
+                            multiplier=multiplier,
+                            max_bets=max_bets ))
       
     
 
