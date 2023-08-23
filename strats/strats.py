@@ -17,6 +17,10 @@ class Strat():
         self.max_bet = max_bet
         self.multiplier = multiplier
         self.initial_multiplier = multiplier
+        self.bet_cooldown = 0 #number of bets to skip
+
+
+        #stats
         self.win_streak = 0
         self.lose_streak = 0
         self.max_bets = max_bets
@@ -27,12 +31,12 @@ class Strat():
         self.highest_balance = start_balance
         self.highest_win_streak = 0
         self.highest_lose_streak = 0
+        self.skipped_bets = 0
+        self.bet_distribution = {}
+        self.balance_history = []
 
         
 
-
-    def description(self):
-        return self.description
     
     def describe(self):
         #return a string describing the strat and all of its parameters can be multiline
@@ -44,8 +48,6 @@ class Strat():
         max bets: {self.max_bets}
         """
     
-    def get_balance(self):
-        return self.balance
 
     def calculate_bet(self, result):
         '''
@@ -79,10 +81,27 @@ class Strat():
         if self.bet > self.max_bet:
             logging.info(f"bet {self.bet} is greater than max bet {self.max_bet} using max bet {self.max_bet} instead")
             self.bet = self.max_bet
-        
+
+        if self.bet_cooldown > 0:
+            self.bet_cooldown -= 1
+            logging.info(f"bet cooldown is active, skipping bet, {self.bet_cooldown} bets left")
+            self.bet = 0
+            self.multiplier = 0
+            self.skipped_bets += 1
+            return
+
         self.multiplier = self.initial_multiplier
         self.balance = self.balance - self.bet
         self.number_of_bets += 1
+
+        # Update the bet distribution dictionary with the current bet amount
+        if self.bet in self.bet_distribution:
+            self.bet_distribution[self.bet] += 1
+        else:
+            self.bet_distribution[self.bet] = 1
+
+        #update the balance history
+        self.balance_history.append(self.balance)
 
     
     def update_stats(self):
@@ -129,6 +148,8 @@ class Strat():
         self.highest_balance = self.start_balance
         self.highest_win_streak = 0
         self.highest_lose_streak = 0
+        self.bet_distribution = {}
+        self.balance_history = []
 
         
             
@@ -148,6 +169,7 @@ class Strat():
         highest balance: {self.highest_balance:.2f}
         highest win streak: {self.highest_win_streak}
         highest lose streak: {self.highest_lose_streak}
+        skipped bets: {self.skipped_bets}
         """)
 
     def report(self):
@@ -164,6 +186,7 @@ class Strat():
             "highest_balance": self.highest_balance,
             "highest_win_streak": self.highest_win_streak,
             "highest_lose_streak": self.highest_lose_streak,
+            "skipped_bets": self.skipped_bets,
 
         }
 
