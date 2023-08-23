@@ -12,6 +12,7 @@ Welcome to the AviatorStratChecker repository! This project aims to provide a po
 
 - Effortlessly scrape Aviator game data from 22bet.
 - Design, simulate, and fine-tune strategies using historical data.
+- Automatically bet using your own strategies.
 - Collaborate with the community by contributing to the project.
 
 ## Getting Started
@@ -46,15 +47,20 @@ To set up and use AviatorStratChecker, follow these simple steps:
    password = "your-password"
    ```
 
-5. **Run Selenium using Docker:**
+5. **Install docker and docker-compose:**
+   - [Docker](https://docs.docker.com/get-docker/)
+   - [Docker Compose](https://docs.docker.com/compose/install/)
+
+
+6. **Run Selenium using Docker:**
    ```bash
    docker-compose up
    ```
 
 
-5. **Execute the script to start gathering live results:**
+7. **Execute the script to start gathering live results:**
    ```bash
-   python main.py
+   python scrape.py
    ```
 
 
@@ -83,6 +89,37 @@ To set up and use AviatorStratChecker, follow these simple steps:
    ```bash
    python checker.py
    ```
+
+
+## After finding a good strategy
+
+1. **Edit the file autobet.py to add your strategy:**
+   ```python
+   from strats.custom_strats import BestStrat
+   
+   def main():
+    strat = BestStrat(
+        description="BestStrat - Example",
+        start_balance=3000,
+        base_bet=0.1,
+        max_bet=0.5,
+        multiplier=1.9,
+        max_bets=10000,
+    )
+   ```
+2. **Run the autobet.py script to start betting:**
+   ```bash
+   python autobet.py
+   ```
+
+## TODO
+   - Add tests to the existing Strats
+   - Add tests to the code
+   - Find some way to scrape past data from the game (maybe using requests)
+   - Add a way to save the data to a database instead of a csv file
+   - Add a way to compare strategies
+   - Add better indicators to the strategies to help the user to decide which one to use
+
 
 ## Contributing
 We welcome contributions! If you encounter any issues or have suggestions, please open an issue or submit a pull request.

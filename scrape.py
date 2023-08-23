@@ -33,6 +33,8 @@ def main():
 
 
             while aviator.in_game() and stop is False:
+                if aviator.disconnected():
+                    break
                 aviator.wait_for_game_to_finish()
                 aviator.add_to_log(aviator.get_last_game_result())
         except Exception as e:

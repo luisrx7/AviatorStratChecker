@@ -12,6 +12,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 class Aviator(Browser):
     '''
     this class will interact with the browser
@@ -49,15 +53,15 @@ class Aviator(Browser):
 
     def logged_in(self):
         if self.debug:
-            print("checking if logged in")
+            logger.debug("checking if logged in")
         element = helium.S("#user-money")
         if element.exists():
             if self.debug:
-                print("logged in")
+                logger.debug("logged in")
             return True
         else:
             if self.debug:
-                print("not logged in")
+                logger.debug("not logged in")
             return False
         
 
@@ -66,16 +70,16 @@ class Aviator(Browser):
         check if we are in game
         '''
         if self.debug:
-            print("checking if in game")
+            logger.debug("checking if in game")
 
         element = self.find_elements(By.XPATH, vars.game_name, timeout=0.5)
         if element or self.driver.title == "Aviator":
             if self.debug:
-                print("in game")
+                logger.debug("in game")
             return True
 
         if self.debug:
-            print("not in game")
+            logger.debug("not in game")
         return False            
     
     def get_last_game_result(self):
@@ -83,9 +87,9 @@ class Aviator(Browser):
         get last game result
         '''
         # if self.debug:
-        #     print("getting last game result")
+        #     logger.debug("getting last game result")
 
-        element = self.find_elements(By.XPATH, vars.last_game_result, timeout=0.5)
+        element = self.find_elements(By.XPATH, vars.last_game_result, timeout=1)
         
         if element is not None:
             return element.text.strip().replace("x", "")
@@ -102,23 +106,23 @@ class Aviator(Browser):
         if not warn the user that a strat is not defined
         '''
         if self.debug:
-            print(f"processing bet for result {result}")
+            logger.debug(f"processing bet for result {result}")
         if self.strat is None:
-            print("WARNING: no strat defined")
+            logger.debug("WARNING: no strat defined")
             return False
 
         self.strat.calculate_bet(result)
         if self.debug:
-            print(f"bet: {self.strat.bet}, multiplier: {self.strat.multiplier}")
+            logger.debug(f"bet: {self.strat.bet}, multiplier: {self.strat.multiplier}")
 
         if self.strat.bet == 0 or self.strat.multiplier == 0:
             if self.debug:
-                print("bet or multiplier is 0, not placing bet")
+                logger.debug("bet or multiplier is 0, not placing bet")
             return False        
 
         if self.place_bet(self.strat.bet, self.strat.multiplier) is False:
             if self.debug:
-                print("could not place bet")
+                logger.debug("could not place bet")
             return False
         
         self.strat.gamble()
@@ -132,6 +136,10 @@ class Aviator(Browser):
 
         # Find the div element with class "payouts-block"
         payouts_div = self.find_elements(By.CLASS_NAME, "payouts-block")
+        if payouts_div is None:
+            if self.debug:
+                logger.debug("could not get game results")
+            return []
 
         # Find all elements with class "bubble-multiplier" within the payouts div
         multiplier_elements = payouts_div.find_elements(By.CLASS_NAME, "bubble-multiplier")
@@ -152,11 +160,11 @@ class Aviator(Browser):
             
         if len(results) > 0:
             # if self.debug:
-            #     print("got game results")
+            #     logger.debug("got game results")
             return results
         else:
             if self.debug:
-                print("could not get game results")
+                logger.debug("could not get game results")
 
 
         return []
@@ -167,17 +175,27 @@ class Aviator(Browser):
         get balance
         '''
         if self.debug:
-            print("getting balance")
+            logger.debug("getting balance")
         element = self.find_elements(By.XPATH, vars.balance)
         #element is a span with the balance
         if element:
             if self.debug:
-                print("got balance")
+                logger.debug("got balance")
             return element.text
         else:
             if self.debug:
-                print("could not get balance")
+                logger.debug("could not get balance")
             return None
+
+
+    def disconnected(self):
+        '''
+            check if disconnected warning is displayed
+        '''
+        disconnected_element = self.find_elements(By.XPATH, vars.disconnected_warning, timeout=0.5)
+        if disconnected_element is not None:
+            return True
+        return False
 
     def wait_for_game_to_finish(self):
         '''
@@ -188,16 +206,22 @@ class Aviator(Browser):
         '''
 
         if self.debug:
-            print("waiting for game to finish")
+            logger.debug("waiting for game to finish")
         last_result = self.get_last_game_result()
         while True:
-            if self.get_last_game_result() != last_result:
+            if self.disconnected():
+                if self.debug:
+                    logger.debug("disconnected")
                 break
+            result = self.get_last_game_result()
+            if result is not None:
+                if result != last_result :
+                    break
             if self.debug:
-                print(".", end="")
+                logger.debug(".", end="")
             time.sleep(0.1)
         if self.debug:
-            print("\ngame finished")
+            logger.debug("\ngame finished")
     
     def add_to_log(self, result):
         '''
@@ -205,7 +229,7 @@ class Aviator(Browser):
         format timestamp (format dd-mm-yyyy hh:mm:ss),result
         '''
         if self.debug:
-            print(f"adding result {result}  to log")
+            logger.debug(f"adding result {result}  to log")
         with open("results.txt", "a") as f:
             f.write(f"{datetime.now().strftime('%d-%m-%Y %H:%M:%S')},{result}\n")
 
@@ -215,15 +239,15 @@ class Aviator(Browser):
         click the buttons to setup auto cashout
         '''
         if self.debug:
-            print("setting up auto bet")
+            logger.debug("setting up auto bet")
 
         if self.click_button(vars.bet_type_button) is False:
             if self.debug:
-                print("could not click bet type button")
+                logger.debug("could not click bet type button")
             return False
         if self.click_button(vars.auto_cashout_button) is False:
             if self.debug:
-                print("could not click auto cashout button")
+                logger.debug("could not click auto cashout button")
             return False
         
 
@@ -232,22 +256,22 @@ class Aviator(Browser):
         place bet with amount and multiplier
         '''
         if self.debug:
-            print(f"setting bet amount to {amount} at multiplier {multiplier}")
+            logger.debug(f"setting bet amount to {amount} at multiplier {multiplier}")
 
 
         if self.send_keys(vars.bet_amount_input_box, str(amount)) is False:
             if self.debug:
-                print("could not set bet amount")
+                logger.debug("could not set bet amount")
             return False
 
         if self.send_keys(vars.multiplier_input_box, str(multiplier)) is False:
             if self.debug:
-                print("could not set multiplier")
+                logger.debug("could not set multiplier")
             return False
         
         if self.click_button(vars.place_bet_button) is False:
             if self.debug:
-                print("could not click place bet button")
+                logger.debug("could not click place bet button")
             return False
         
         return True

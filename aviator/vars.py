@@ -25,3 +25,8 @@ place_bet_button = '/html/body/app-root/app-game/div/div[1]/div[2]/div/div[2]/di
 
 bet_amount_input_box = '/html/body/app-root/app-game/div/div[1]/div[2]/div/div[2]/div[3]/app-bet-controls/div/app-bet-control[1]/div/div[1]/div[1]/app-spinner/div/div[2]/input'
 multiplier_input_box = '/html/body/app-root/app-game/div/div[1]/div[2]/div/div[2]/div[3]/app-bet-controls/div/app-bet-control[1]/div/div[3]/div[2]/div[2]/div/app-spinner/div/div[2]/input'
+
+
+#disconnected
+
+disconnected_warning = '/html/body/app-root/app-disconnect-message/div/div[2]/div'

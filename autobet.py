@@ -30,14 +30,13 @@ stop = False
 
 
 
-
 def main():
     strat = DAlembertStrat(
         description="DAlembertStrat",
         start_balance=3000,
         base_bet=0.1,
-        max_bet=1,
-        multiplier=2,
+        max_bet=0.5,
+        multiplier=1.9,
         max_bets=10000,
     )
     
@@ -55,7 +54,7 @@ def main():
                 last_result = aviator.get_last_game_result()
                 aviator.process_bet(float(last_result))
                 aviator.add_to_log(last_result)
-                print(f"balance: {aviator.get_balance()}")
+                logging.info(f"balance: {aviator.get_balance()}")
         except Exception as e:
             console.print_exception(show_locals=True)
             logging.error(e)
