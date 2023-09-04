@@ -13,11 +13,11 @@ logging.basicConfig(format='%(message)s', level=logging.INFO, datefmt='%m/%d/%Y 
 
 
 
-start_balance=1000
+start_balance=25
 base_bet=0.1
-max_bet=10
+max_bet=1
 multiplier=2
-max_bets=1000
+max_bets=200
 runs_per_strat=5
 
 
@@ -66,67 +66,67 @@ def main():
     
     
     
-    strats.append(MartingaleStrat("Martingale",
-                            start_balance=start_balance,
-                            base_bet=base_bet,
-                            max_bet=max_bet,
-                            multiplier=multiplier,
-                            max_bets=max_bets ))
+    # strats.append(MartingaleStrat("Martingale",
+    #                         start_balance=start_balance,
+    #                         base_bet=base_bet,
+    #                         max_bet=max_bet,
+    #                         multiplier=multiplier,
+    #                         max_bets=max_bets ))
     
     
-    strats.append(AntiMartingaleStrat("AntiMartingale",
-                            start_balance=start_balance,
-                            base_bet=base_bet,
-                            max_bet=max_bet,
-                            multiplier=multiplier,
-                            max_bets=max_bets ))
-    
-
-    strats.append(DAlembertStrat(description="DAlembertStrat",
-                        start_balance=start_balance,
-                        base_bet=base_bet,
-                        max_bet=max_bet,
-                        multiplier=multiplier,
-                        max_bets=max_bets,
-                        ))
-    
-    strats.append(AntiDAlembertStrat("AntiDAlembertStrat",
-                        start_balance=start_balance,
-                        base_bet=base_bet,
-                        max_bet=max_bet,
-                        multiplier=multiplier,
-                        max_bets=max_bets ))
+    # strats.append(AntiMartingaleStrat("AntiMartingale",
+    #                         start_balance=start_balance,
+    #                         base_bet=base_bet,
+    #                         max_bet=max_bet,
+    #                         multiplier=multiplier,
+    #                         max_bets=max_bets ))
     
 
-    strats.append(DAlembertStopLossCooldownStrat(description="DAlembertStopLossCooldownStrat",
-                            start_balance=start_balance,
-                            base_bet=base_bet,
-                            max_bet=max_bet,
-                            multiplier=multiplier,
-                            max_bets=max_bets,
-                            max_lose_streak = 5,
-                            stop_loss_cooldown = 10
-                            ))
+    # strats.append(DAlembertStrat(description="DAlembertStrat",
+    #                     start_balance=start_balance,
+    #                     base_bet=base_bet,
+    #                     max_bet=max_bet,
+    #                     multiplier=multiplier,
+    #                     max_bets=max_bets,
+    #                     ))
+    
+    # strats.append(AntiDAlembertStrat("AntiDAlembertStrat",
+    #                     start_balance=start_balance,
+    #                     base_bet=base_bet,
+    #                     max_bet=max_bet,
+    #                     multiplier=multiplier,
+    #                     max_bets=max_bets ))
+    
+
+    # strats.append(DAlembertStopLossCooldownStrat(description="DAlembertStopLossCooldownStrat",
+    #                         start_balance=start_balance,
+    #                         base_bet=base_bet,
+    #                         max_bet=max_bet,
+    #                         multiplier=multiplier,
+    #                         max_bets=max_bets,
+    #                         max_lose_streak = 5,
+    #                         stop_loss_cooldown = 10
+    #                         ))
     
     strats.append(FibonacciStrat("FibonacciStrat",
                             start_balance=start_balance,
                             base_bet=base_bet,
-                            max_bet=5,
-                            multiplier=multiplier,
-                            max_bets=max_bets ))
-    strats.append(ParoliStrat("Paroli",
-                            start_balance=start_balance,
-                            base_bet=base_bet,
                             max_bet=max_bet,
                             multiplier=multiplier,
                             max_bets=max_bets ))
+    # strats.append(ParoliStrat("Paroli",
+    #                         start_balance=start_balance,
+    #                         base_bet=base_bet,
+    #                         max_bet=max_bet,
+    #                         multiplier=multiplier,
+    #                         max_bets=max_bets ))
     
-    strats.append(one_3_2_6Strat("one_3_2_6",
-                            start_balance=start_balance,
-                            base_bet=base_bet,
-                            max_bet=max_bet,
-                            multiplier=multiplier,
-                            max_bets=max_bets ))
+    # strats.append(one_3_2_6Strat("one_3_2_6",
+    #                         start_balance=start_balance,
+    #                         base_bet=base_bet,
+    #                         max_bet=max_bet,
+    #                         multiplier=multiplier,
+    #                         max_bets=max_bets ))
       
     
 

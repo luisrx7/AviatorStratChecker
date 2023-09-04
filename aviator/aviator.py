@@ -24,13 +24,15 @@ class Aviator(Browser):
 
     def __init__(self, headless=False, test=False, remote_driver=True,
                 remote_address="127.0.0.1",remote_port=4446, use_cookies=False,
-                debug=False,strat: Strat = None):
+                debug=False,strat: Strat = None,demo=True):
         super().__init__(headless= headless, test=test, remote_driver=remote_driver,
                 remote_address=remote_address,remote_port=remote_port,
                   use_cookies=use_cookies, profile_path=vars.profile_path)
         
         self.debug = debug
         self.strat = strat
+        self.demo = demo
+
         
         if self.strat is not None:
             self.strat.reset()
@@ -217,8 +219,6 @@ class Aviator(Browser):
             if result is not None:
                 if result != last_result :
                     break
-            if self.debug:
-                logger.debug(".", end="")
             time.sleep(0.1)
         if self.debug:
             logger.debug("\ngame finished")
@@ -284,7 +284,11 @@ class Aviator(Browser):
         helium.write("AVIATOR", into="SEARCH")
         #sleep for 2 seconds to let the search results load
         time.sleep(2)
-        self.click_button(vars.play_free_button_of_first_search_result)
+        if self.demo:
+            self.click_button(vars.play_free_button_of_first_search_result)
+        else:
+            self.click_button(vars.play_button_of_first_search_result)    
+        
 
         #wait for the game to load
         time.sleep(2)

@@ -11,7 +11,7 @@ rich.traceback.install()
 console = rich.console.Console()
 
 
-logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', level=logging.INFO, datefmt='%m/%d/%Y %I:%M:%S')
+logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', level=logging.DEBUG, datefmt='%m/%d/%Y %I:%M:%S')
 
 
 def signal_handler(sig, frame):
@@ -27,7 +27,7 @@ def main():
     
     while stop is False:
         try:
-            aviator = Aviator(debug=True)
+            aviator = Aviator(debug=True,demo=False,remote_address="192.168.2.150")
             aviator.login()
             aviator.go_to_game()
 
