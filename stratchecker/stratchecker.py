@@ -127,7 +127,7 @@ class Strat_checker():
 
         #on the first plot use balance_history , on the second use bet_distribution
         # Initialise the subplot function using number of rows and columns
-        figure, axis = plt.subplots(1, 2)
+        figure, axis = plt.subplots(1, 3)
 
         axis[0].plot(x_axis,self.strat.balance_history,color=color[run_number])
         axis[0].set_ylabel('balance')
@@ -146,6 +146,13 @@ class Strat_checker():
         # # Adding text labels on top of each bar
         for bet, freq in self.strat.bet_distribution.items():
             axis[1].text(bet, freq, str(freq), ha="center", va="bottom")
+
+        # 3rd plot is the game results
+        axis[2].plot(x_axis,self.results[self.slices[run_number][0]:upper_bound],color=color[run_number])
+        axis[2].set_ylabel('multiplier')
+        axis[2].set_xlabel('bet number')
+        axis[2].set_title(f"Game Results - run {run_number+1}")
+        
 
         plt.show()
         
